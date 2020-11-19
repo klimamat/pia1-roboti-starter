@@ -2,6 +2,7 @@
 #define BLUDISTE_H
 
 #include <vector>
+#include <string>
 
 // Tyto tridy nemente, slouzi pro praci s bludistem - na takoveto tride budou testovani vsichni roboti
 
@@ -32,12 +33,14 @@ public:
     Souradnice poloha();
     int pocet_kroku();
     int pocet_narazu();
+    bool uloz_cestu(std::string nazev_souboru);
 protected:
     int n, m; // Rozmery mapy (obdelnik)
     Souradnice r_finish;
     std::vector<bool> wall; // Pole predstavujici steny
 private:
     Souradnice r;
+    std::vector<Souradnice> cesta;
     int steps, touches; 
     bool finish;
 };

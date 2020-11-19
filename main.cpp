@@ -66,7 +66,7 @@ bool nacti_bludiste(std::string nazev_souboru, std::vector<Problem> & ukoly) {
 }
 
 int main() {
-
+  
     std::vector<Problem> ukoly;
     
     if (!nacti_bludiste("bludiste.dat",ukoly)) {
@@ -82,8 +82,12 @@ int main() {
         std::cout << "Prohledavam bludiste " << ukol.nazev << ": \n";
         
         projdi(ukol.bludiste, *robot);
+
+	    ukol.bludiste.uloz_cestu(ukol.nazev + "_cesta.dat");
         
         projdi(ukol.bludiste_odkryte, *robot);
+	
+	    ukol.bludiste_odkryte.uloz_cestu(ukol.nazev + "_odkryte_cesta.dat");
     }
     
     delete robot;
