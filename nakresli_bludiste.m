@@ -10,8 +10,8 @@ function nakresli_bludiste(soubor_bludiste)
   for j=1:m
     for i=1:n
       wall(i,j) = fscanf(bludiste_soubor,"%i",1);
-    endfor
-  endfor
+    end
+  end
   
   hold on;
   axis([-0.5,n-0.5,-0.5,m-0.5],"equal");
@@ -27,6 +27,6 @@ function nakresli_bludiste(soubor_bludiste)
   for i=1:n
     for j=1:m
       if (wall(i,j)) plot(i-1,j-1,'ks'); end
-    endfor
-  endfor
+    end
+  end
 end
