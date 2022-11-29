@@ -82,7 +82,7 @@ bool Bludiste::vpravo() {
     }
 }
 bool Bludiste::cil() { 
-    if (r == r_finish) return true;
+    if (r == r_finish || finish) return true;
     else return false;
 }
 Souradnice Bludiste::poloha() { return r; }
