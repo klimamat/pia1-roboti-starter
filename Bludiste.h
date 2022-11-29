@@ -25,6 +25,7 @@ public:
     Bludiste(int _n, int _m);
     Bludiste(int _n, int _m, Souradnice f);
     Bludiste(int _n, int _m, Souradnice f, std::vector<bool> zdi);
+    Bludiste(std::string nazev_souboru); // Nacteni bludiste ze souboru
     bool nahoru();
     bool dolu();
     bool vlevo();
@@ -33,11 +34,13 @@ public:
     Souradnice poloha();
     int pocet_kroku();
     int pocet_narazu();
+    virtual std::string nazev();
     bool uloz_cestu(std::string nazev_souboru);
 protected:
     int n, m; // Rozmery mapy (obdelnik)
     Souradnice r_finish;
     std::vector<bool> wall; // Pole predstavujici steny
+    std::string nazev_bludiste;
 private:
     Souradnice r;
     std::vector<Souradnice> cesta;
@@ -53,8 +56,10 @@ public:
     BludisteOdkryte(int _n, int _m);
     BludisteOdkryte(int _n, int _m, Souradnice f);
     BludisteOdkryte(int _n, int _m, Souradnice f, std::vector<bool> zdi);
+    BludisteOdkryte(std::string nazev_souboru); // Nacteni bludiste ze souboru
     bool zed(Souradnice u);
     Souradnice poloha_cile();
+    virtual std::string nazev();
 };
 
 #endif

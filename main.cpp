@@ -5,92 +5,56 @@
 #include "VasRobot.h" 
 
 #include <string>
-#include <sstream>
-#include <fstream>
 #include <iostream>
 #include <vector>
+#include <memory>
 
-struct Problem {
-    std::string nazev;
-    Bludiste bludiste;
-    BludisteOdkryte bludiste_odkryte;
+const std::vector<std::string> vstupniSoubory = {
+	"PRAZDNY_bludiste.dat",
+	"ZED1_bludiste.dat",
+	"ZED2_bludiste.dat",
+	"NAHODNY_bludiste.dat",
+	"LABYRINT_bludiste.dat"
 };
 
-template <class BL>
-void projdi(BL & bludiste, Prohledavac & robot) {         
-    
-    if (!robot.start(bludiste))
-        std::cout << "Nepodarilo se inicializovat robota :(\n";
-    else {
-        while (!bludiste.cil() && bludiste.pocet_kroku() < 50000)
-            robot.krok(bludiste);
-        
-        if (bludiste.cil())    
-            std::cout << robot.jmeno() << " potreboval " << bludiste.pocet_kroku() << " kroku a " << bludiste.pocet_narazu() << " narazu.\n";
-        else 
-            std::cout << robot.jmeno() << " nenasel cestu.\n";
-            
-        if (!robot.stop())
-            std::cout << "Pomoc, robota nejde vypnout!!!\n";
-    }
-}
-
-bool nacti_bludiste(std::string nazev_souboru, std::vector<Problem> & ukoly) {
-    std::ifstream soubor;
-    std::string radka;
-    soubor.open(nazev_souboru,std::ios::in);
-    
-    if (!soubor) return false;
-    
-    while (std::getline(soubor, radka)) {
-        std::stringstream radka_buffer;
-        radka_buffer << radka;
-        
-        int n,m;
-        std::string nazev;
-        Souradnice f;
-        radka_buffer >> nazev >> n >> m >> f.x >> f.y;
-        
-        std::vector<bool> zdi(n*m);
-        for (int i=0; i<zdi.size(); ++i) {
-            int h;
-            radka_buffer >> h;
-            zdi[i] = h == 1;
-        }
-        
-        ukoly.push_back(Problem{nazev,Bludiste(n,m,f,zdi),BludisteOdkryte(n,m,f,zdi)});
-    }
-    
-    soubor.close();
-    return true;
-}
-
 int main() {
-  
-    std::vector<Problem> ukoly;
-    
-    if (!nacti_bludiste("bludiste.dat",ukoly)) {
-        std::cout << "Nepovedlo se nacist bludiste.\n";
-        return 1;
-    }
-    
-    //ukoly.push_back(Problem{"Prazdny1",Bludiste(20,30,{15,27}),BludisteOdkryte(20,30,{15,27})});
-    
-    Prohledavac* robot = new VasRobot(); // tady doplnite konstruktor tridy vaseho robota
-    
-    for (auto & ukol : ukoly) {
-        std::cout << "Prohledavam bludiste " << ukol.nazev << ": \n";
-        
-        projdi(ukol.bludiste, *robot);
 
-	    ukol.bludiste.uloz_cestu(ukol.nazev + "_cesta.dat");
-        
-        projdi(ukol.bludiste_odkryte, *robot);
-	
-	    ukol.bludiste_odkryte.uloz_cestu(ukol.nazev + "_odkryte_cesta.dat");
+    // Nacteni vstupnich souboru ze seznamu vzdy jako zakryte i odkryte bludiste
+  
+    std::vector<std::shared_ptr<Bludiste>> ukoly;
+
+    for (const auto& nazevSouboru : vstupniSoubory) {
+        ukoly.push_back(std::make_shared<Bludiste>(nazevSouboru));
+        ukoly.push_back(std::make_shared<BludisteOdkryte>(nazevSouboru));
     }
     
-    delete robot;
+    std::shared_ptr<Prohledavac> robot = std::make_shared<VasRobot>(); // tady doplnite misto "VasRobot" tridu vaseho robota
+
+    // Ted se pokusime pomoci robota projit vsechna bludiste
+    
+    for (auto & bludiste : ukoly) {
+        std::cout << "Prohledavam bludiste " << bludiste->nazev() << ": \n";
+        
+        if (!robot->start(*bludiste))
+            std::cout << "Nepodarilo se inicializovat robota :(\n";
+        else {
+
+            // Maximalni pocet kroku robota je omezeny zde
+            for (int i=0; i < 100000 && !bludiste->cil(); ++i) {
+                robot->krok(*bludiste);
+            }
+        
+            if (bludiste->cil())    
+                std::cout << robot->jmeno() << " potreboval " << bludiste->pocet_kroku() << " kroku a " << bludiste->pocet_narazu() << " narazu.\n";
+            else 
+                std::cout << robot->jmeno() << " nenasel cestu.\n";
+            
+            if (!robot->stop())
+                std::cout << "Pomoc, robota nejde vypnout!!!\n";
+        }
+
+	bludiste->uloz_cestu(bludiste->nazev() + "_cesta.dat");
+    }
 
     return 0;
 }
