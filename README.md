@@ -10,3 +10,5 @@ BludisteOdkryte pak poskytuje i kompletní informaci o jakémkoli poli bludišt�
 Robota ovšem musíte naprogramovat vy! Uděláte to implementováním rozhraní Prohledavac jakožto vlastní odvozené třídy. Zde jsou předepsané metody pro "nastartování" a "vypnutí" robota - nemusíte je využít, ale pokud nevrátí true, bude program hlásit chybu robota. Dále metoda vracející jméno robota a především metody pro jednotlivý krok vyhledání cesty v bludišti (ve skutečnosti ale v této metodě můžete udělat klidně více kroků po polích, třída Bludiste si to stejně spočítá...).
 
 Jak bude váš "robot" fungovat uvnitř už je jen na vás :)
+
+Máte k dispozici také funkce pro vykreslení bludiště a cesty v Octave/Matlabu. Pro jejich využití jednoduše použijte název souboru bludiště/cesty jako vstupní parametr. Bludiště a cestu lze vykreslit přes sebe pro představu co váš robot v bludišti asi tak dělá...
